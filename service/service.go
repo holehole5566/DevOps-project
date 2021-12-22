@@ -9,7 +9,7 @@ import (
 type ArticleService interface {
 
 	AddArticle(content string, title string) (int, error)
-	GetAllArticle() (int, error)
+	GetAllArticle() ([]*model.Article, error)
 	GetArticle(param string) (*model.Article, error)
 	DelArticle(param string) error
 

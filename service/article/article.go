@@ -14,13 +14,13 @@ func (srv *Service) GetArticle(param string) (*model.Article, error) {
 
 	id, err := strconv.Atoi(param)
 	if err != nil {
-		log.Println("Get Article: param id %s is not a number", param)
+		log.Println("Get Article: param id is not a number", param)
 		return nil, C.ErrArticleIDNotNumber
 	}
 
 	tour, err := repo.Article.Get(id)
 	if err == sql.ErrNoRows {
-		log.Println("Get Article: tour id %d record not found", id)
+		log.Println("Get Article: tour id record not found", id)
 		return nil, C.ErrArticleNotFound
 	} else if err != nil {
 		log.Println("Get Article: unknown database error", err.Error())
@@ -30,12 +30,12 @@ func (srv *Service) GetArticle(param string) (*model.Article, error) {
 	return tour, nil
 }
 
-func (srv *Service) GetAllArticle() (int, error) {
+func (srv *Service) GetAllArticle() ([]*model.Article, error) {
 	// TODO: cache
 	total, err := repo.Article.Gets()
 	if err != nil {
 		log.Println("Get Articles: unknown database error, ", err.Error())
-		return 1, C.ErrDatabase
+		return nil, C.ErrDatabase
 	}
 	return total, nil
 }
@@ -60,7 +60,7 @@ func (srv *Service) DelArticle(param string) error {
 
 	id, err := strconv.Atoi(param)
 	if err != nil {
-		log.Println("Del Article: param id %s is not a number", param)
+		log.Fatal("Del Article: param id is not a number", param)
 		return C.ErrArticleIDNotNumber
 	}
 

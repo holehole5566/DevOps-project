@@ -9,16 +9,16 @@ import (
 )
 
 type Article struct {
-	title string  `json:"title"`
-	subject    string `json:"content"`
-	date       string    `json:"date"`
+	ID       int        `json:"id"`
+	Title    string     `json:"title"`
+	Content	 string 	`json:"content"`
 }
 
 func GetArticle(c *gin.Context) {
 
 	appG := app.Gin{C: c}
 
-	switch tour, err := service.article.GetArticle(c.Param("id")); err {
+	switch tour, err := service.Article.GetArticle(c.Param("id")); err {
 
 	case C.ErrArticleIDNotNumber:
 		appG.Response(http.StatusBadRequest, C.INVALID_PARAMS, err.Error(), nil)
@@ -40,7 +40,7 @@ func GetArticle(c *gin.Context) {
 func GetAllArticle(c *gin.Context) {
 	appG := app.Gin{C: c}
 
-	switch total, err := service.article.GetAllArticle(); err {
+	switch total, err := service.Article.GetAllArticle(); err {
 
 	case C.ErrDatabase:
 		appG.Response(http.StatusInternalServerError, C.SERVER_ERROR, err.Error(), nil)
@@ -56,14 +56,14 @@ func AddArticle(c *gin.Context) {
 
 	appG := app.Gin{C: c}
 
-	var t article
+	var t Article
 
 	if err := c.BindJSON(&t); err != nil {
 		appG.Response(http.StatusBadRequest, C.INVALID_PARAMS, err.Error(), nil)
 		return
 	}
 
-	switch tourID, err := service.Article.AddArticle(t.Collects, t.Title); err {
+	switch tourID, err := service.Article.AddArticle(t.Content, t.Title); err {
 
 	case C.ErrArticleAddFormatIncorrect:
 		appG.Response(http.StatusBadRequest, C.ERROR_ADD_ARTICLE_FORMAT_INCORRECT, err.Error(), nil)
@@ -83,7 +83,7 @@ func AddArticle(c *gin.Context) {
 func DelArticle(c *gin.Context) {
 	appG := app.Gin{C: c}
 
-	switch err := service.article.DelArticle(c.Param("id")); err {
+	switch err := service.Article.DelArticle(c.Param("id")); err {
 
 	case C.ErrArticleDelIDIncorrect:
 		appG.Response(http.StatusBadRequest, C.ERROR_DEL_ARTICLE_ID_INCORRECT, err.Error(), nil)

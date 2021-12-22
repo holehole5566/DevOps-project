@@ -3,8 +3,6 @@ package mysql
 import (
 	"database/sql"
 	"errors"
-
-	"strconv"
 	"time"
 
 	"github.com/holehole5566/goproject/model"
@@ -70,7 +68,7 @@ func (m *mysqlArticleRepository) Gets() (goblog []*model.Article, err error) {
 	return
 }
 
-func (m *mysqlArticleRepository) Add(collectsID []int, title string) (int, error) {
+func (m *mysqlArticleRepository) Add(content string, title string) (int, error) {
 	cur := time.Now()
 	tx, err := m.db.Begin()
 	if err != nil {
@@ -83,19 +81,6 @@ func (m *mysqlArticleRepository) Add(collectsID []int, title string) (int, error
 	}
 
 	id, err := result.LastInsertId()
-	if err != nil {
-		tx.Rollback()
-		return 0, err
-	}
-
-	stmt := "INSERT INTO tour_collects VALUES "
-	tourIDstring := strconv.Itoa(int(id))
-	for i := range collectsID {
-		stmt += "(" + tourIDstring + "," + strconv.Itoa(collectsID[i]) + "),"
-	}
-	stmt = stmt[:len(stmt)-1]
-
-	result, err = tx.Exec(stmt)
 	if err != nil {
 		tx.Rollback()
 		return 0, err
