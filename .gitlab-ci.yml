@@ -1,0 +1,23 @@
+stages:
+  - test
+  - deploy
+
+test_variable:
+  stage: test
+  script:
+    - echo "$SSH_PRIVATE_KEY"
+
+deploy:
+  stage: deploy
+  before_script:
+    - mkdir -p .ssh
+    - chmod 700 .ssh
+    - echo "$SSH_PRIVATE_KEY" >> .ssh/rsa
+    - chmod 700 .ssh/rsa
+  script:
+    - >
+      ssh -o StrictHostKeyChecking=no -i .ssh/rsa $HOST -tt "
+      cd goblog &&
+      git pull https://github.com/holehole5566/goproject &&
+      docker-compose up -d --build 
+      "
