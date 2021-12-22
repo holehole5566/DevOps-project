@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/holehole5566/goproject/model/mysql"
 	"github.com/holehole5566/goproject/router"
+
 )
 
 func init() {
@@ -16,7 +17,7 @@ func init() {
 func main() {
 
 	gin.SetMode("debug")
-	routers := routers.InitRouters()
+	routers := router.InitRouters()
 	endPoint := fmt.Sprintf(":%d", "80")
 	maxHeaderBytes := 1 << 20
 	c := &tls.Config{MinVersion: tls.VersionTLS12}
