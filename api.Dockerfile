@@ -1,12 +1,3 @@
-# build vue web
-FROM node:12.16-alpine
-ENV BUILD_SRC=/app/web
-RUN mkdir -p ${BUILD_SRC}
-COPY ./web ${BUILD_SRC}
-WORKDIR ${BUILD_SRC}
-RUN npm install
-RUN npm run build
-
 FROM golang:1.16-alpine
 WORKDIR /app
 
