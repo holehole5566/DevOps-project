@@ -2,8 +2,10 @@ package mysql
 
 import (
 	"database/sql"
+	"errors"
 	"github.com/holehole5566/goproject/model"
 	"github.com/holehole5566/goproject/repo"
+	
 )
 
 type mysqlArticleRepository struct {
@@ -16,18 +18,26 @@ func NewArticleRepository(db *sql.DB) repo.ArticleRepo {
 
 func (m *mysqlArticleRepository) Get(id int) (*model.Article, error) {
 
-	rows, err := m.db.Query(`SELECT id,title,content from goblog where id = ?`, id)
+	scanID := 0
+	scanTitle := ""
+	scanContent := ""
+	if err := m.db.QueryRow("SELECT id, title,content FROM goblog WHERE id = ?", id).Scan(&scanID, &scanTitle,&scanContent); err != nil {
+		return nil, err
+	} else if scanID != id {
+		return nil, errors.New("scan id and param id are not matched")
+	}
+
+	rows, err := m.db.Query(`SELECT id, title ,content FROM goblog 
+								where id = ?`, id)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
 	var article model.Article
-
-	if err := rows.Scan(&article.ID, &article.Title,&article.Content); err != nil {
-		return nil, err
-	}
-
+	article.ID = id
+	article.Title = scanTitle
+	article.Content = scanContent
 	return &article, nil
 }
 
