@@ -12,7 +12,7 @@ import (
 func Setup() {
 	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		"hole",
-		"123123",
+		"123",
 		"db",
 		"goblog"))
 	if err != nil {
