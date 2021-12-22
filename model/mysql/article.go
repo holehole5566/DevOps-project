@@ -18,8 +18,9 @@ func (m *mysqlArticleRepository) Get(id int) (*model.Article, error) {
 
 	scanContent := ""
 	scanTitle := ""
+	scanid := 0
 
-	rows, err := m.db.Query(`SELECT title,content from goblog where id = ?`, id)
+	rows, err := m.db.Query(`SELECT id,title,content from goblog where id = ?`, id)
 	if err != nil {
 		return nil, err
 	}
@@ -28,9 +29,10 @@ func (m *mysqlArticleRepository) Get(id int) (*model.Article, error) {
 	var article model.Article
 	article.Content = scanContent
 	article.Title = scanTitle
+	article.ID = scanid
 	for rows.Next() {
-		title, content := "", ""
-		rows.Scan(&title, &content)
+		id, title, content :=0, "", ""
+		rows.Scan(&id,&title, &content)
 	}
 	return &article, nil
 }
