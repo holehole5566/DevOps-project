@@ -18,7 +18,7 @@ func GetArticle(c *gin.Context) {
 
 	appG := app.Gin{C: c}
 
-	switch tour, err := service.Article.GetArticle(c.Param("id")); err {
+	switch article, err := service.Article.GetArticle(c.Param("id")); err {
 
 	case C.ErrArticleIDNotNumber:
 		appG.Response(http.StatusBadRequest, C.INVALID_PARAMS, err.Error(), nil)
@@ -30,7 +30,7 @@ func GetArticle(c *gin.Context) {
 		appG.Response(http.StatusInternalServerError, C.ERROR_GET_ARTICLE_FAIL, err.Error(), nil)
 
 	case nil:
-		appG.Response(http.StatusOK, C.SUCCESS, C.SuccessMsg, tour)
+		appG.Response(http.StatusOK, C.SUCCESS, C.SuccessMsg, article)
 
 	default:
 		appG.Response(http.StatusInternalServerError, C.SERVER_ERROR, err.Error(), nil)
@@ -63,7 +63,7 @@ func AddArticle(c *gin.Context) {
 		return
 	}
 
-	switch tourID, err := service.Article.AddArticle(t.Content, t.Title); err {
+	switch articleID, err := service.Article.AddArticle(t.Content, t.Title); err {
 
 	case C.ErrArticleAddFormatIncorrect:
 		appG.Response(http.StatusBadRequest, C.ERROR_ADD_ARTICLE_FORMAT_INCORRECT, err.Error(), nil)
@@ -75,7 +75,7 @@ func AddArticle(c *gin.Context) {
 		appG.Response(http.StatusInternalServerError, C.SERVER_ERROR, err.Error(), nil)
 
 	case nil:
-		appG.Response(http.StatusOK, C.SUCCESS, C.SuccessMsg, tourID)
+		appG.Response(http.StatusOK, C.SUCCESS, C.SuccessMsg, articleID)
 
 	}
 }
