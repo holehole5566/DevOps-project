@@ -13,23 +13,11 @@ type Article struct {
 	date       string    `json:"date"`
 }
 
-// GetTour godoc
-// @Summary Get a tour by id
-// @Description Get a tour by id
-// @Tags game,tour
-// @Accept plain
-// @Produce json
-// @Param id path int true "id of the tour"
-// @Success 200 {object} app.Response
-// @Failure 400 {object} app.Response
-// @Failure 404 {object} app.Response
-// @Failure 500 {object} app.Response
-// @Router /game/tours/{id} [get]
-func GetTour(c *gin.Context) {
+func GetArticle(c *gin.Context) {
 
 	appG := app.Gin{C: c}
 
-	switch tour, err := service.Game.GetTour(c.Param("id")); err {
+	switch tour, err := service.article.GetArticle(c.Param("id")); err {
 
 	case C.ErrTourIDNotNumber:
 		appG.Response(http.StatusBadRequest, C.INVALID_PARAMS, err.Error(), nil)
@@ -48,19 +36,10 @@ func GetTour(c *gin.Context) {
 	}
 }
 
-// GetTotalTours godoc
-// @Summary Get total num of tours
-// @Description Get total num of tours
-// @Tags game,tour
-// @Accept plain
-// @Produce json
-// @Success 200 {object} app.Response
-// @Failure 500 {object} app.Response
-// @Router /game/tours [get]
-func GetTotalTours(c *gin.Context) {
+func GetAllArticle(c *gin.Context) {
 	appG := app.Gin{C: c}
 
-	switch total, err := service.Game.GetTotalTours(); err {
+	switch total, err := service.article.GetAllArticle(); err {
 
 	case C.ErrDatabase:
 		appG.Response(http.StatusInternalServerError, C.SERVER_ERROR, err.Error(), nil)
@@ -71,37 +50,13 @@ func GetTotalTours(c *gin.Context) {
 	}
 }
 
-func GetTours(c *gin.Context) {
+
+func AddArticle(c *gin.Context) {
+
 	appG := app.Gin{C: c}
 
-	switch total, err := service.Game.GetTours(); err {
+	var t article
 
-	case C.ErrDatabase:
-		appG.Response(http.StatusInternalServerError, C.SERVER_ERROR, err.Error(), nil)
-
-	case nil:
-		appG.Response(http.StatusOK, C.SUCCESS, C.SuccessMsg, total)
-
-	}
-}
-
-// AddTour godoc
-// @Summary Add a new tour
-// @Description Add a new tour
-// @Tags game,tour
-// @Accept json
-// @Produce json
-// @Param token header string true "auth token, must register & login to get the token"
-// @Param songs body string true "id of the song, should have many"
-// @Success 200 {object} app.Response
-// @Failure 400 {object} app.Response
-// @Failure 404 {object} app.Response
-// @Failure 500 {object} app.Response
-// @Router /game/tours/new [post]
-func AddTour(c *gin.Context) {
-	appG := app.Gin{C: c}
-
-	var t tour
 	if err := c.BindJSON(&t); err != nil {
 		appG.Response(http.StatusBadRequest, C.INVALID_PARAMS, err.Error(), nil)
 		return
@@ -124,10 +79,10 @@ func AddTour(c *gin.Context) {
 	}
 }
 
-func DelTour(c *gin.Context) {
+func DelArticle(c *gin.Context) {
 	appG := app.Gin{C: c}
 
-	switch err := service.Game.DelTour(c.Param("id")); err {
+	switch err := service.article.DelArticle(c.Param("id")); err {
 
 	case C.ErrTourDelIDIncorrect:
 		appG.Response(http.StatusBadRequest, C.ERROR_DEL_TOUR_ID_INCORRECT, err.Error(), nil)
