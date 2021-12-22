@@ -10,86 +10,70 @@ import (
 
 )
 
-func (srv *Service) GetTour(param string) (*model.Tour, error) {
+func (srv *Service) GetArticle(param string) (*model.Article, error) {
 
 	id, err := strconv.Atoi(param)
 	if err != nil {
-		log.Println("Get Tour: param id %s is not a number", param)
-		return nil, C.ErrTourIDNotNumber
+		log.Println("Get Article: param id %s is not a number", param)
+		return nil, C.ErrArticleIDNotNumber
 	}
 
-	tour, err := repo.Tour.Get(id)
+	tour, err := repo.Article.Get(id)
 	if err == sql.ErrNoRows {
-		log.Println("Get Tour: tour id %d record not found", id)
-		return nil, C.ErrTourNotFound
+		log.Println("Get Article: tour id %d record not found", id)
+		return nil, C.ErrArticleNotFound
 	} else if err != nil {
-		log.Println("Get Tour: unknown database error", err.Error())
+		log.Println("Get Article: unknown database error", err.Error())
 		return nil, C.ErrDatabase
 	}
 
 	return tour, nil
 }
 
-func (srv *Service) GetTours() ([]*model.Tour, error) {
+func (srv *Service) GetAllArticle() (int, error) {
 	// TODO: cache
-	total, err := repo.Tour.Gets()
+	total, err := repo.Article.Gets()
 	if err != nil {
-		log.Println("Get Tours: unknown database error, ", err.Error())
-		return nil, C.ErrDatabase
+		log.Println("Get Articles: unknown database error, ", err.Error())
+		return 1, C.ErrDatabase
 	}
 	return total, nil
 }
 
-func (srv *Service) GetTotalTours() (int, error) {
-	// TODO: cache
-	total, err := repo.Tour.GetTotal()
-	if err != nil {
-		log.Println("Get Tours: unknown database error, ", err.Error())
-		return 0, C.ErrDatabase
-	}
-	return total, nil
-}
 
-func (srv *Service) AddTour(collectsID []int, title string) (int, error) {
+func (srv *Service) AddArticle(content string, title string) (int, error) {
 
-	if len(collectsID) == 0 || title == "" {
-		return 0, C.ErrTourAddFormatIncorrect
+	if len(content) == 0 || title == "" {
+		return 0, C.ErrArticleAddFormatIncorrect
 	}
 
-	collectNum, err := repo.Collect.CheckManyExist(collectsID)
+	id, err := repo.Article.Add(content, title)
 	if err != nil {
-		log.Println("Check Collects Exist: ", err)
-		return 0, C.ErrDatabase
-	} else if len(collectsID) != int(collectNum) {
-		return 0, C.ErrTourAddCollectsRecordNotFound
-	}
-	id, err := repo.Tour.Add(collectsID, title)
-	if err != nil {
-		log.Println("Add Tour: ", err)
+		log.Println("Add Article: ", err)
 		return 0, C.ErrDatabase
 	}
 
 	return id, nil
 }
 
-func (srv *Service) DelTour(param string) error {
+func (srv *Service) DelArticle(param string) error {
 
 	id, err := strconv.Atoi(param)
 	if err != nil {
-		log.Println("Del Tour: param id %s is not a number", param)
-		return C.ErrTourIDNotNumber
+		log.Println("Del Article: param id %s is not a number", param)
+		return C.ErrArticleIDNotNumber
 	}
 
 	if id < 0 {
-		return C.ErrTourDelIDIncorrect
+		return C.ErrArticleDelIDIncorrect
 	}
 
-	if tour, _ := repo.Tour.Get(id); tour == nil {
-		return C.ErrTourDelDeleted
+	if article, _ := repo.Article.Get(id); article == nil {
+		return C.ErrArticleDelDeleted
 	}
 
-	if err := repo.Tour.Del(id); err != nil {
-		log.Println("Del Tour: ", err)
+	if err := repo.Article.Del(id); err != nil {
+		log.Println("Del Article: ", err)
 		return C.ErrDatabase
 	}
 

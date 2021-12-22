@@ -29,12 +29,13 @@ func InitRouters() *gin.Engine {
 
 	articleAPI := r.Group("/api/article")
 
-	articleAPI.GET("/:id", article.ValidateUser)
+	articleAPI.GET("/:id", article.GetArticle)
 
-	articleAPI.POST("/", article.Register)
+	articleAPI.POST("/", article.AddArticle)
 
-	articleAPI.GET("/l", article.Login)
+	articleAPI.GET("/", article.GetAllArticle)
 
+	articleAPI.DELETE("/:id", article.DelArticle)
 
 	r.NoRoute(static.Serve("/", static.LocalFile("dist", true)))
 

@@ -8,9 +8,9 @@ import (
 
 type ArticleService interface {
 
-	AddArticle(collectsID []int, title string) (int, error)
+	AddArticle(content string, title string) (int, error)
 	GetAllArticle() (int, error)
-	GetArticle(param string) (*model.Tour, error)
+	GetArticle(param string) (*model.Article, error)
 	DelArticle(param string) error
 
 }

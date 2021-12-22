@@ -18,7 +18,7 @@ func main() {
 
 	gin.SetMode("debug")
 	routers := router.InitRouters()
-	endPoint := fmt.Sprintf(":%d", "80")
+	endPoint := fmt.Sprintf(":%d", 80)
 	maxHeaderBytes := 1 << 20
 	c := &tls.Config{MinVersion: tls.VersionTLS12}
 
