@@ -18,16 +18,16 @@ func (srv *Service) GetArticle(param string) (*model.Article, error) {
 		return nil, C.ErrArticleIDNotNumber
 	}
 
-	tour, err := repo.Article.Get(id)
+	article, err := repo.Article.Get(id)
 	if err == sql.ErrNoRows {
-		log.Println("Get Article: tour id record not found", id)
+		log.Println("Get Article: article id record not found", id)
 		return nil, C.ErrArticleNotFound
 	} else if err != nil {
 		log.Println("Get Article: unknown database error", err.Error())
 		return nil, C.ErrDatabase
 	}
 
-	return tour, nil
+	return article, nil
 }
 
 func (srv *Service) GetAllArticle() ([]*model.Article, error) {
