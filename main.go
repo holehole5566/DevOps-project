@@ -9,7 +9,26 @@ import (
 	"github.com/holehole5566/goproject/router"
 )
 
+func init() {
+	mysql.Setup()
+}
+
 func main() {
+
+	gin.SetMode("debug")
+	routers := routers.InitRouters()
+	endPoint := fmt.Sprintf(":%d", "80")
+	maxHeaderBytes := 1 << 20
+	c := &tls.Config{MinVersion: tls.VersionTLS12}
+
+	server := &http.Server{
+		Addr:           endPoint,
+		Handler:        routers,
+		MaxHeaderBytes: maxHeaderBytes,
+		TLSConfig:      c,
+	}
+
+	server.ListenAndServe()
 
 }
 
