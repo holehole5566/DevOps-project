@@ -1,26 +1,13 @@
-FROM node:lts-alpine
+FROM node:15.1.0-slim AS builder
+WORKDIR /workspace
+COPY ./hello-world/ /workspace/
+RUN npm install && npm run build
 
-# install simple http server for serving static content
-RUN npm install -g http-server
-
-# make the 'app' folder the current working directory
-WORKDIR /app
-
-# copy both 'package.json' and 'package-lock.json' (if available)
-COPY package*.json ./
-
-# install project dependencies leaving out dev dependencies
-RUN npm install --production
-
-# copy project files and folders to the current working directory (i.e. 'app' folder)
-COPY . .
-
-# build app for production with minification
-RUN npm run build
 
 FROM golang:1.16-alpine
-WORKDIR /app
 
+COPY --from=build-stage /app/dist /app/
+WORKDIR /app
 # add some necessary packages
 RUN apk update && \
     apk add libc-dev && \
@@ -35,7 +22,6 @@ RUN go mod download && go mod verify
 RUN go get github.com/githubnemo/CompileDaemon
 # Copy and build the app
 COPY . .
-COPY --from=build-stage /app/dist /app/
 COPY ./entrypoint.sh /entrypoint.sh
 
 # wait-for-it requires bash, which alpine doesn't ship with by default. Use wait-for instead
