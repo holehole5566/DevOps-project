@@ -19,5 +19,7 @@ deploy:
       ssh -o StrictHostKeyChecking=no -i .ssh/rsa $HOST -tt "
       cd goblog &&
       git pull https://github.com/holehole5566/goproject &&
+      cd web && npm run build &&
+      cd .. &&
       docker-compose up -d --build 
       "
