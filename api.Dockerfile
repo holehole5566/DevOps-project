@@ -1,9 +1,3 @@
-FROM node:15.1.0-slim AS builder
-WORKDIR /workspace
-COPY ./web/ /workspace/
-RUN npm install && npm run build
-
-
 FROM golang:1.16-alpine
 
 
@@ -23,7 +17,7 @@ RUN go get github.com/githubnemo/CompileDaemon
 # Copy and build the app
 COPY . .
 COPY ./entrypoint.sh /entrypoint.sh
-COPY  --from=builder /workspace/dist/ .
+
 # wait-for-it requires bash, which alpine doesn't ship with by default. Use wait-for instead
 ADD https://raw.githubusercontent.com/eficode/wait-for/v2.1.0/wait-for /usr/local/bin/wait-for
 RUN chmod +rx /usr/local/bin/wait-for /entrypoint.sh
