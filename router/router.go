@@ -22,7 +22,6 @@ func InitRouters() *gin.Engine {
 
 	r.Use(static.Serve("/", static.LocalFile("dist", true)))
 
-
 	r.HandleMethodNotAllowed = true
 
 	r.NoMethod(methodNotAllowed)
