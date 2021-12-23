@@ -21,5 +21,5 @@ deploy:
       git pull https://github.com/holehole5566/goproject &&
       cd web && npm install && npm run build &&
       cd .. &&
-      docker-compose up -d --build 
+      sudo docker-compose up -d --build 
       "
