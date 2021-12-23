@@ -1,4 +1,6 @@
 .DS_Store
+# Don't add Binary
+main
 node_modules
 /dist
 # local env files
