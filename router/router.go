@@ -20,7 +20,7 @@ func InitRouters() *gin.Engine {
 	r.Use(gin.Recovery())
 	r.Use(cors.Default())
 
-	r.Use(static.Serve("/", static.LocalFile("./web/dist", true)))
+	r.Use(static.Serve("/", static.LocalFile("dist", true)))
 
 
 	r.HandleMethodNotAllowed = true
@@ -37,7 +37,7 @@ func InitRouters() *gin.Engine {
 
 	articleAPI.DELETE("/:id", article.DelArticle)
 
-	r.NoRoute(static.Serve("/", static.LocalFile("./web/dist", true)))
+	r.NoRoute(static.Serve("/", static.LocalFile("dist", true)))
 
 	return r
 }
